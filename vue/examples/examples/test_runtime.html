@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="../dist/vue.js"></script>
+  <!--<script src="../dist/vue.runtime.js"></script>-->
+</head>
+<body>
+<div id="demo">
+</div>
+
+</body>
+<script>
+  var instance = new Vue({
+    data: {
+      hi: "monrning ",
+      name: "Mr zhang"
+    },
+    render(h){ //h vm.$createElement = function (a, b, c, d) { return createElement(vm, a, b, c, d, true); };
+      console.log("rendering");
+      return h('div', this.hi + " " + this.name);
+    }
+  });
+
+  instance.$mount(document.getElementById("demo"));
+</script>
+</html>

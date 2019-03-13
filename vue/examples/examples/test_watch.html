@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="../dist/vue.js"></script>
+  <!--<script src="../dist/vue.runtime.js"></script>-->
+</head>
+<body>
+<div>  // watch 调用$watch建立一个获取监听属性的 Watcher，callback为fn表达式，数据变化后notify Watcher执行callback</div>
+<div id="demo">
+  <div >
+    {{name}}
+    <!-- :{{hiii}} -->
+  </div>
+  <div>
+    {{greeting}}
+  </div>
+  
+  <!-- <input type="text" v-model="text"> -->
+  <input type="button" @click="testClick" value="click"/>
+</div>
+
+</body>
+<script>
+  var instance = new Vue({
+    el:"#demo",
+    data: {
+      name: "devinn",
+      greeting: "hello"
+    },
+    watch: {
+      name: function(){
+        this.greeting = this.greeting + "  " + this.name;
+      }
+    },
+    
+    methods: {
+      testClick(){
+        this.name = 'devinnzhang';
+      }
+    }
+  });
+
+  //instance.$mount(document.getElementById("demo"));
+</script>
+</html>

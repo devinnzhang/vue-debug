@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="../dist/vue.js"></script>
+  <!--<script src="../dist/vue.runtime.js"></script>-->
+</head>
+<body>
+  <div id="hook-arguments-example" v-demo:foo.a.b="message"></div>
+</body>
+<script>
+
+  /**
+   * 1.注册阶段：Vue.directive 将对应的 demo 假如到 options.directivesz中 options.directivesz["demo"] = {bind: function xxx}
+   * 2.mount阶段：update 调用 render进行挂载
+   * （1）.render 调用 template能力对el进行解析，返回带指令属性的Vnode
+   *      vm._render().data.directives[0]
+   *      {name: "demo", rawName: "v-demo:foo.a.b", value: "hellooooo!", expression: "message", arg: "foo", …}
+   * （2）.update：
+   *      createElm
+   *        normalizeDirectives$1处理解析的Vnode指令，一个主要作用是去 $options.directivesz 中取出 name对应的指令绑定函数
+   *      callHook$1 bind 直接执行
+   *  遗留： template获取data message是否会触发 message的get？
+   */
+
+  Vue.directive('demo', {
+    bind: function (el, binding, vnode) {
+      var s = JSON.stringify
+      el.innerHTML =
+        'name: '       + s(binding.name) + '<br>' +
+        'value: '      + s(binding.value) + '<br>' +
+        'expression: ' + s(binding.expression) + '<br>' +
+        'argument: '   + s(binding.arg) + '<br>' +
+        'modifiers: '  + s(binding.modifiers) + '<br>' +
+        'vnode keys: ' + Object.keys(vnode).join(', ')
+    }
+  });
+
+  new Vue({
+    el: '#hook-arguments-example',
+    data: {
+      message: 'hellooooo!'
+    }
+  });
+</script>
+</html>
