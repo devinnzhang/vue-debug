@@ -1,2 +1,2 @@
 # vue-debug
-vue源码相关
+vue技术栈相关
