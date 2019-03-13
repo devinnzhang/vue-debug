@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="../dist/vue.js"></script>
+  <!--<script src="../dist/vue.runtime.js"></script>-->
+</head>
+<body>
+<div id="demo">
+  <div >
+    {{hiii}}
+  </div>
+</div>
+
+<div id="hook-arguments-example" v-demo:foo.a.b="message"></div>
+
+</body>
+<script>
+  // 这种情况不需要
+  var instance = new Vue({
+    template: '<span>{{ name }}</span>',
+    created: function () {
+      this.sayHello();
+      console.log("created");
+    },
+    mounted: function () {
+      console.log("mounted");
+    },
+    props: ["props"],
+    data: {
+      hi: "monrning ",
+      name: "Mr zhang"
+    },
+    methods: {
+      sayHello: function () {
+        console.log(this.hi , this.name);
+      }
+    },
+    computed: {
+      hiii: function(){
+        return this.hi + "123";
+      }
+    }//,
+//    render(h){ //h vm.$createElement = function (a, b, c, d) { return createElement(vm, a, b, c, d, true); };
+//      console.log("rendering");
+//      return h('div', this.hi + " " + this.name);
+//    }
+  });
+
+  instance.$mount(document.getElementById("demo"));
+</script>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="../dist/vue.js"></script>
+  <!--<script src="../dist/vue.runtime.js"></script>-->
+</head>
+<body>
+<div id="app">
+    cache: false, 获取计算属性时调用computerGetter会直接执行get函数，否则执行Watcher的evalute函数（但此时dirty关闭，多次调用只会执行一次，所以返回值不会变化，类似于已缓存）
+  <div>
+    {{msg2}}
+  </div>
+</div>
+
+</body>
+<script>
+  new Vue({
+    el: "#app",
+    data: {
+      msg: 'time:',
+      msg2: ''
+    },
+    computed: {
+      example: {
+        //cache: false,
+        get: function () {
+          return  this.msg + Date.now();
+        }
+      }
+    },
+    mounted(){
+      console.log(this.msg)
+      let _this = this;
+      setInterval(function(){
+        _this.msg2 = _this.example;
+      }, 500)
+    }
+  })
+ // instance.$mount(document.getElementById("demo"));
+</script>
+</html>

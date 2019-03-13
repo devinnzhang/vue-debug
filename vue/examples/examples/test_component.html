@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="../dist/vue.js"></script>
+  <!--<script src="../dist/vue.runtime.js"></script>-->
+</head>
+<body>
+<div id="app">
+  <anchored-heading :level="1">Hello world!</anchored-heading>
+</div>
+
+</body>
+<script>
+
+  /**
+   * 注册阶段 ：id render props
+   * Vue.component 将组件id 以及对应的组件注册到 this.options.components中
+   *    components:
+   *    KeepAlive:{name: "keep-alive", abstract: true, props: {…}, created: ƒ, destroyed: ƒ, …}
+   *    Transition:{name: "transition", props: {…}, abstract: true, render: ƒ}
+   *    TransitionGroup:{props: {…}, render: ƒ, beforeUpdate: ƒ, updated: ƒ, methods: {…}}
+   *    anchored-heading:ƒ VueComponent(options)
+   *
+   *    VueComponent处理过程：（调用）
+   *
+   */
+  var getChildrenTextContent = function (children) {
+    return children.map(function (node) {
+      return node.children
+        ? getChildrenTextContent(node.children)
+        : node.text
+    }).join('')
+  }
+
+
+  Vue.component('anchored-heading', {
+    render: function (createElement) {
+      // create kebabCase id
+      var headingId = getChildrenTextContent(this.$slots.default)
+        .toLowerCase()
+        .replace(/\W+/g, '-')
+        .replace(/(^\-|\-$)/g, '')
+
+      return createElement(
+        'h' + this.level,
+        [
+          createElement('a', {
+            attrs: {
+              name: headingId,
+              href: '#' + headingId
+            }
+          }, this.$slots.default)
+        ]
+      )
+    },
+    props: {
+      level: {
+        type: Number,
+        required: true
+      }
+    }
+  });
+
+  new Vue({
+    el: "#app"
+  })
+ // instance.$mount(document.getElementById("demo"));
+</script>
+</html>
