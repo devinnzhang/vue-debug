@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="./../../dist/vue.js"></script>
+</head>
+<body>
+<div></div>
+
+数组监听需要处理的三种情况 1.数组本身的赋值 2.数字push等方法的使用导致的变化 3.数组中的值变化导致的变化
+
+ps：数组类型push等操作的触发更新同基本类型的更新触发不在同一个地方，基本类型在defineReactive中<br>
+<br>
+2.使用数组方法导致的变化
+
+初始化：重写数组的__proto__ = arrayMethods  + observer 赋值给 数组的 __ob__（变化后可以直接通知订阅的watcher）
+var arrayProto = Array.prototype;
+var arrayMethods = Object.create(arrayProto);
+var methodsToPatch = ['push', 'pop', 'shift', 'unshift', 'splice', sort', 'reverse'];
+methodsToPatch.forEach(function (method) {
+  // cache original method
+  var original = arrayProto[method];
+  def(arrayMethods, method, function mutator () {
+    var args = [], len = arguments.length;
+    while ( len-- ) args[ len ] = arguments[ len ];
+
+    var result = original.apply(this, args);
+    var ob = this.__ob__;
+    var inserted;
+    switch (method) {
+      case 'push':
+      case 'unshift':
+        inserted = args;
+        break
+      case 'splice':
+        inserted = args.slice(2);
+        break
+    }
+    if (inserted) { ob.observeArray(inserted); }
+    // notify change
+    ob.dep.notify();
+    return result
+  });
+});
+
+调用 push = 方法的触发 数组this上的ob 通知watcher更新  ob.dep.notify();
+<br>
+if (childOb) {
+  childOb.dep.depend(); //数组方法变化收集依赖
+  if (Array.isArray(value)) {
+    dependArray(value);//循环处理
+  }
+}
+
+<div id="demo">
+  <div >
+    {{testArry}}
+    <!-- :{{hiii}} -->
+  </div>
+</div>
+
+</body>
+<script>
+  var instance = new Vue({
+    el:"#demo",
+    data: {
+      testArry: [1, 2, 3]
+    }
+  });
+
+  //instance.$mount(document.getElementById("demo"));
+</script>
+</html>
