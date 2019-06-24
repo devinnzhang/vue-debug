@@ -3,44 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <title></title>
-  <script src="../dist/vue.js"></script>
+  <script src="../../dist/vue.js"></script>
   <!--<script src="../dist/vue.runtime.js"></script>-->
 </head>
 <body>
 <div id="demo">
-  <div >
-    {{name}}
-    <!-- :{{hiii}} -->
+  <div id="example">
+    <p>Original message: "{{ message }}"</p>
+    <p>Computed reversed message: "{{ reversedMessage }}"</p>
   </div>
-  <div>
-    {{greeting}}
-  </div>
-  
-  <!-- <input type="text" v-model="text"> -->
-  <input type="button" @click="testClick" value="click"/>
+  <input type="button" @click="clickHandler" value="click"/>
 </div>
 
 </body>
 <script>
   // 这种情况不需要
-  var instance = new Vue({
-    el:"#demo",
-    data: {
-      name: "devinn"
-    },
-    computed: {
-      greeting: function(){
-        return 'hello ' + this.name;
-      }
-    },
-    
-    methods: {
-      testClick(){
-        this.name = 'devinnzhang';
-      }
+  var vm = new Vue({
+  el: '#example',
+  data: {
+    message: 'Hello'
+  },
+  computed: {
+    // a computed getter
+    reversedMessage: function () {
+      // `this` points to the vm instance
+      return this.message.split('').reverse().join('')
     }
-  });
+  },
+  methods: {
+    clickHandler(){
+      this.message = 'Hello World!';
+    }
+  }
+})
 
-  //instance.$mount(document.getElementById("demo"));
+  //vm.$mount(document.getElementById("demo"));
 </script>
 </html>
